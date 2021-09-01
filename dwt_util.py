@@ -24,6 +24,7 @@ import subprocess
 import tempfile
 from six.moves import winreg
 import shlex
+import platform
 
 import win32serviceutil
 import winerror
@@ -64,13 +65,17 @@ class CalledProcessError(Exception):
 
 
 def is_64bit():
-    if os.name == 'nt':
-        os_arch = os.environ["PROCESSOR_ARCHITEW6432"]
-        return True if os_arch == 'AMD64' else False
+    platform = platform.architecture()
+    bits = platform[0]
+    os = platform[1]
+    if os == "WindowsPE":
+        if bits = "64bit":
+            return True
+        else:
+            return False
     else:
         logger.critical("This was only meant to be run on Windows-based system. Specifically, Windows 10.")
         os._exit(0)
-    return os_arch
 
 
 def ip_block(ip_list, undo):
